@@ -1,0 +1,171 @@
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: #E8EBF5;
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-box {
+            background: #fff;
+            width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f8f8;
+        }
+
+        .user-msg, .bot-msg {
+            padding: 10px 15px;
+            margin: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-msg {
+            background: #DCF8C6;
+            align-self: flex-end;
+        }
+
+        .bot-msg {
+            background: #E2E2E2;
+            align-self: flex-start;
+        }
+
+        form {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2C50EF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #1f3edb;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div class="messages" id="messages"></div>
+            <form id="chat-form">
+                <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('user-input');
+        const messages = document.getElementById('messages');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = input.value;
+            messages.innerHTML += `<div class="user-msg">You: ${msg}</div>`;
+            input.value = '';
+
+            const res = await fetch('/get', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `msg=${encodeURIComponent(msg)}`
+            });
+
+            const reply = await res.text();
+            console.log("Raw reply:", reply);  // ✅ Debug raw reply
+            const cleanedReply = reply.replace(/^\?+/, '').trim();  // ✅ Remove leading "?" and trim
+            messages.innerHTML += `<div class="bot-msg"><strong>Bot:</strong> ${cleanedReply}</div>`;
+            messages.scrollTop = messages.scrollHeight;
+        });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medical Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <img src="{{ url_for('static', filename='doctor-avatar.png') }}" alt="Doctor Avatar" class="avatar" />
+      <div class="chat-title">
+        <h2>Medical Chatbot</h2>
+        <span>Ask me anything!</span>
+      </div>
+      <div class="status-dot"></div>
+    </div>
+
+    <div class="chat-body" id="messages"></div>
+
+    <form class="chat-input" id="chat-form">
+      <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
+      <button type="submit">➤</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = input.value;
+      messages.innerHTML += `<div class="user">You: ${msg}</div>`;
+      input.value = '';
+
+      const res = await fetch('/get', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `msg=${encodeURIComponent(msg)}`
+      });
+
+      const reply = await res.text();
+      messages.innerHTML += `<div class="bot">Bot: ${reply}</div>`;
+      messages.scrollTop = messages.scrollHeight;
+    });
+  </script>
+</body>
+</html>
